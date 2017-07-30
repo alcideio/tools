@@ -25,7 +25,7 @@ container_veth()
         veth_index=$(cat /sys/class/net/$v/ifindex)
         #echo "$v : \"${veth_index}\"";
         if [ "${veth_index}"x = "${iflink}"x ];then 
-            echo $v
+            echo ${iflink}:$v
             return 0
         fi
     done
@@ -45,9 +45,9 @@ main()
         veth=$(container_veth ${c})
         if [ $? -ne 0 ];then
             echo "ERROR failed to get veth of \"${c}\""
-            return 1
+            continue
         fi
-        echo "${c} ${veth}"
+        echo "${veth} ${c}"
     done
     return 0
 }
