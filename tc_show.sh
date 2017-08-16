@@ -3,6 +3,11 @@ this_file=$(basename $0)
 this_dir=$(dirname $0)
 this_dir=$(cd ${this_dir};pwd)
 TC=${this_dir}/tc
+SUDO="sudo -E"
+if [ $(id -u) -eq 0 ];then
+    echo "running as root"
+    SUDO=
+fi
 
 
 show_nic(){
@@ -16,7 +21,7 @@ show_nic(){
     echo "INFO ${i} filter" 
     echo "====================" 
     for gress in ingress egress;do
-        sudo -E ${TC} filter show dev ${nic} ${gress}
+        ${SUDO} ${TC} filter show dev ${nic} ${gress}
     done
     return 0
 }

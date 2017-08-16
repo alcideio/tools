@@ -3,7 +3,11 @@ this_file=$(basename $0)
 this_dir=$(dirname $0)
 this_dir=$(cd ${this_dir};pwd)
 TC=${this_dir}/tc
-
+SUDO="sudo -E"
+if [ $(id -u) -eq 0 ];then
+    echo "running as root"
+    SUDO=
+fi
 
 clean_nic(){
     local nic=${1}
@@ -12,9 +16,9 @@ clean_nic(){
         echo "ERROR nic \"${nic}\" not exist"
         return 1
     fi
-    sudo -E ${TC} filter del dev ${nic} ingress
-    sudo -E ${TC} filter del dev ${nic} egress
-    sudo -E ${TC} qdisc del dev ${nic} clsact
+    ${SUDO} ${TC} filter del dev ${nic} ingress
+    ${SUDO} ${TC} filter del dev ${nic} egress
+    ${SUDO} ${TC} qdisc del dev ${nic} clsact
     return 0
 }
 
